@@ -16,6 +16,9 @@ class Node:
     def get_connected(self):
         return self.connected_nodes
     
+    def get_name(self):
+        return self.name
+    
     
 class Canvas(QWidget):
     def __init__(self, nodes, *args, **kwargs):
@@ -38,17 +41,12 @@ class Canvas(QWidget):
             for node in layer:
                 #self.draw_node_and_its_connections(node)    
                 self.draw_node(i,j)
-                self.draw_connection(node)
+                self.draw_connections(i,j,node.get_connected())
                 j += 1
             i += 1
             
-        
-    #def draw_node_and_its_connections(self,Node):
-        #self.draw_node(Node)
-        #self.draw_connections(Node)
-        
     def draw_node(self,i,j):
-        print("drawing {} {}".format(i,j))
+        #print("drawing {} {}".format(i,j))
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
 
@@ -60,14 +58,48 @@ class Canvas(QWidget):
         p.setPen(pen)
         p.drawRect(r)
         
-    def draw_connections(self,nodes):
+    def draw_connections(self,i,j,nodes):
         for node in nodes:
-            self.draw_connection(node)
+            self.draw_connection(i,j,node)
     
-    def draw_connection(self,node):
-        return 0
+    def draw_connection(self,i,j,node):
+        di,dj = self.find_ij(node)
+        print("drawing connection from (){}{} to ({}){}{}".format(i,j,node.get_name(),di,dj))
         
-
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        pen = QPen(Qt.red, 3)
+        p.setPen(pen)
+        p.drawLine(5+self.tx*i+self.dx,5+self.ty*j+self.dy,5+self.tx*di+self.dx,5+self.ty*dj+self.dy)
+        
+        #r = QRect(self.tx*i+self.dx,self.ty*j+self.dy,20,20)
+        #outer, inner = Qt.gray, Qt.lightGray        
+        #p.fillRect(r, QBrush(inner))
+        #pen = QPen(outer)
+        #pen.setWidth(1)
+        #p.setPen(pen)
+        #p.drawLine(r)
+       
+        
+    def find_ij(self,mynode):
+        i = 0
+        found = False
+        
+        for layer in self.nodes:
+            j = 0
+            for node in layer:
+                if node.get_name() is mynode.get_name():
+                    found = True
+                    break
+                j += 1
+                
+            if found is True:
+                break
+            i += 1
+            
+        return i,j
+        
+        
     
 class Renderer(QMainWindow):
     def __init__(self,nodes,*args, **kwargs):
@@ -95,10 +127,14 @@ class System:
         for layer in self.layers:
             j = 0
             for node in layer:
-                print("Connecting {} {}".format(i,j))
-                #if i is not self.layers_max-1:
-                    #n = self.layers[i+1][randint(0,len(self.layers[i+1]))]
-                    #node.add_connection(n)
+                print("Node {} {}".format(i,j))
+                if i is not self.layers_max-1:
+                    for k in range(randint(1,self.connection_max)):
+                        x = len(self.layers[i+1])-1
+                        d = randint(0,x)
+                        print(" --> connecting to {} {}".format(i+1,d))
+                        n = self.layers[i+1][d]
+                        node.add_connection(n)
                 j+=1
             i+=1
 
