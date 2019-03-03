@@ -34,6 +34,7 @@ class Canvas(QWidget):
     def mouseReleaseEvent(self, event):
         self.sys.add_change()
         self.nodes = self.sys.get_data()
+        print("Count: {}".format(self.sys.calc_intersections()))
         QWidget.repaint(self)
         #self.paintEvent(event)
         #self.draw()
@@ -72,7 +73,7 @@ class Canvas(QWidget):
             self.draw_connection(i,j,node)
     
     def draw_connection(self,i,j,node):
-        di,dj = self.find_ij(node)
+        di,dj = self.sys.find_ij(node)
         #print("drawing connection from (){}{} to ({}){}{}".format(i,j,node.get_name(),di,dj))
         
         p = QPainter(self)
@@ -80,25 +81,6 @@ class Canvas(QWidget):
         pen = QPen(Qt.red, 3)
         p.setPen(pen)
         p.drawLine(10+self.tx*i+self.dx,10+self.ty*j+self.dy,10+self.tx*di+self.dx,10+self.ty*dj+self.dy)
-        
-        
-    def find_ij(self,mynode):
-        i = 0
-        found = False
-        
-        for layer in self.nodes:
-            j = 0
-            for node in layer:
-                if node == mynode:
-                    found = True
-                    break
-                j += 1
-                
-            if found is True:
-                break
-            i += 1
-            
-        return i,j
         
     
 class Renderer(QMainWindow):
@@ -158,11 +140,60 @@ class System:
         #del self.layers[x]
         self.layers[x][j],self.layers[x][y] = self.layers[x][y],self.layers[x][j]
         
-    
+        
+    def calc_intersections(self):
+        i = 0
+        res = 0
+        for layer in self.layers:
+            res += self.calc_intersections_beetween_to_adjcent_layers(i)
+            i += 1
+        
+        return res
+        
+    def calc_intersections_beetween_to_adjcent_layers(self,i):
+        if i is self.layers_max:
+            return 0
+        
+        vec = []
+        for node in self.layers[i]:
+            for n in node.get_connected():
+                i,j = self.find_ij(n)
+                vec.append(j)
+            #vec.append([j for i,j in node.get_connected()])
+        
+        res = 0
+        k = 0
+        #print(vec)
+        #exit(0)
+        for v in vec:
+            for i in range(0,k):
+               if vec[i] > vec[k]:
+                res += 1 
+            k += 1
+        return res
+        
+    def find_ij(self,mynode):
+        i = 0
+        found = False
+        
+        for layer in self.layers:
+            j = 0
+            for node in layer:
+                if node == mynode:
+                    found = True
+                    break
+                j += 1
+                
+            if found is True:
+                break
+            i += 1
+            
+        return i,j
+        
 initial_data = {
-    'num_layers' : 10,
+    'num_layers' : 3,
     'max_nodes_in_layer' : 6,
-    'max_node_connection' : 5,
+    'max_node_connection' : 1,
 }
 
 if __name__ == '__main__':
