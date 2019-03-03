@@ -4,6 +4,7 @@ from PyQt4.QtGui import *
 #from PyQt5.QtWidgets import *
 from PyQt4.QtCore import *
 from random import randint
+import random
 
 class Node:
     def __init__(self, name):
@@ -21,20 +22,24 @@ class Node:
     
     
 class Canvas(QWidget):
-    def __init__(self, nodes, *args, **kwargs):
+    def __init__(self, sys, *args, **kwargs):
         super(Canvas, self).__init__(*args, **kwargs)
-        self.nodes = nodes
+        self.sys = sys
         self.tx = 100
         self.ty = 100
         self.dx = 50
         self.dy = 50
-        
+        self.nodes = self.sys.get_data()
 
+    def mouseReleaseEvent(self, event):
+        self.sys.add_change()
+        self.nodes = self.sys.get_data()
+        #self.paintEvent(event)
+     
     def paintEvent(self, event):
         self.draw()
         
     def draw(self):
-        #for nodes
         i = 0
         for layer in self.nodes:
             j = 0
@@ -64,22 +69,14 @@ class Canvas(QWidget):
     
     def draw_connection(self,i,j,node):
         di,dj = self.find_ij(node)
-        print("drawing connection from (){}{} to ({}){}{}".format(i,j,node.get_name(),di,dj))
+        #print("drawing connection from (){}{} to ({}){}{}".format(i,j,node.get_name(),di,dj))
         
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         pen = QPen(Qt.red, 3)
         p.setPen(pen)
-        p.drawLine(5+self.tx*i+self.dx,5+self.ty*j+self.dy,5+self.tx*di+self.dx,5+self.ty*dj+self.dy)
+        p.drawLine(10+self.tx*i+self.dx,10+self.ty*j+self.dy,10+self.tx*di+self.dx,10+self.ty*dj+self.dy)
         
-        #r = QRect(self.tx*i+self.dx,self.ty*j+self.dy,20,20)
-        #outer, inner = Qt.gray, Qt.lightGray        
-        #p.fillRect(r, QBrush(inner))
-        #pen = QPen(outer)
-        #pen.setWidth(1)
-        #p.setPen(pen)
-        #p.drawLine(r)
-       
         
     def find_ij(self,mynode):
         i = 0
@@ -88,7 +85,7 @@ class Canvas(QWidget):
         for layer in self.nodes:
             j = 0
             for node in layer:
-                if node.get_name() is mynode.get_name():
+                if node == mynode:
                     found = True
                     break
                 j += 1
@@ -99,12 +96,12 @@ class Canvas(QWidget):
             
         return i,j
         
-        
     
 class Renderer(QMainWindow):
-    def __init__(self,nodes,*args, **kwargs):
+    def __init__(self,sys,*args, **kwargs):
         super(Renderer, self).__init__(*args, **kwargs)
-        canvas = Canvas(nodes)
+        #nodes = sys.get_data()
+        canvas = Canvas(sys)
         self.setCentralWidget(canvas)
 
 
@@ -114,6 +111,7 @@ class System:
         self.nodes_max = kwargs['max_nodes_in_layer']
         self.connection_max = kwargs['max_node_connection']
         self.create_random_placement()
+        #self.layers = [[]]
   
     def create_random_placement(self):
         self.create_layers()
@@ -141,16 +139,31 @@ class System:
     def get_data(self):
         return self.layers
     
+    def add_change(self):
+        #return 0
+        import time
+        random.seed(time.clock())
+
+        x = randint(0,len(self.layers)-1)
+        
+        j = randint(0,len(self.layers[x])-1)
+        y = randint(0,len(self.layers[x])-1)
+        
+        print("SWAPPING {}{} to {}{}".format(x,j,x,y))
+
+        #del self.layers[x]
+        self.layers[x][j],self.layers[x][y] = self.layers[x][y],self.layers[x][j]
+        
+    
 initial_data = {
-    'num_layers' : 5,
-    'max_nodes_in_layer' : 3,
-    'max_node_connection' : 2,
+    'num_layers' : 10,
+    'max_nodes_in_layer' : 6,
+    'max_node_connection' : 5,
 }
 
 if __name__ == '__main__':
     sys = System(**initial_data)
-    nodes = sys.get_data()
     app = QApplication([])
-    r = Renderer(nodes)
+    r = Renderer(sys)
     r.show()
     app.exec_()
