@@ -6,10 +6,20 @@ from PyQt4.QtCore import *
 from random import randint
 import random
 
+class Color:
+    def __init__(self,r,g,b):
+        self.red = r
+        self.green = g
+        self.blue = b
+        
+    def get(self):
+        return self.red,self.green,self.blue
+
 class Node:
-    def __init__(self, name):
+    def __init__(self, name, color):
         self.name = name
         self.connected_nodes = []
+        self.color = color
         
     def add_connection(self,Node):
         self.connected_nodes.append(Node)
@@ -20,6 +30,8 @@ class Node:
     def get_name(self):
         return self.name
     
+    def get_color(self):
+        return self.color.get()
     
 class Canvas(QWidget):
     def __init__(self, sys, *args, **kwargs):
@@ -50,18 +62,21 @@ class Canvas(QWidget):
             j = 0
             for node in layer:
                 #self.draw_node_and_its_connections(node)    
-                self.draw_node(i,j)
+                self.draw_node(i,j,node)
                 self.draw_connections(i,j,node.get_connected())
                 j += 1
             i += 1
             
-    def draw_node(self,i,j):
+    def draw_node(self,i,j,node):
         #print("drawing {} {}".format(i,j))
+        #i,j = sys.find_ij(node)
+        r,g,b = node.get_color()
+        color = QColor(r,g,b)
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
 
         r = QRect(self.tx*i+self.dx,self.ty*j+self.dy,20,20)
-        outer, inner = Qt.gray, Qt.lightGray        
+        outer, inner = Qt.gray, color        
         p.fillRect(r, QBrush(inner))
         pen = QPen(outer)
         pen.setWidth(1)
@@ -103,8 +118,11 @@ class System:
         self.create_layers()
         self.create_connections()
         
+    def create_rand_color(self):
+        return Color(randint(0,255),randint(0,255),randint(0,255))
+    
     def create_layers(self):
-        self.layers = [ [ Node("Node{}{}".format(i,j)) for j in range(randint(1,self.nodes_max)) ] for i in range(self.layers_max) ]
+        self.layers = [ [ Node("Node{}{}".format(i,j),self.create_rand_color()) for j in range(randint(1,self.nodes_max)) ] for i in range(self.layers_max) ]
         
     def create_connections(self):
         i = 0
