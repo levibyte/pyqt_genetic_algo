@@ -34,7 +34,11 @@ class Canvas(QWidget):
     def mouseReleaseEvent(self, event):
         self.sys.add_change()
         self.nodes = self.sys.get_data()
+        QWidget.repaint(self)
         #self.paintEvent(event)
+        #self.draw()
+        #ev = QResizeEvent(QSize(1000,1000),QSize(1000,1000))
+        #QMainWindow.resizeEvent(self, ev)
      
     def paintEvent(self, event):
         self.draw()
