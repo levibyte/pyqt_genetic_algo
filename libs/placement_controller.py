@@ -1,0 +1,86 @@
+from libs.node import *
+import random
+from random import randint
+
+class PlacementController:
+    def __init__(self):
+        #i=0
+        self.layers = []
+
+    #def __init__(self,sys):
+    #    self.layers = sys.get_data()
+  
+    def get_placement(self):
+        return self.layers
+    
+    def set_placement(self,placement):
+        self.layers = placement.get_data()
+        
+    def add_change(self):
+        #return 0
+        import time
+        random.seed(time.clock())
+
+        x = randint(0,len(self.layers)-1)
+        
+        j = randint(0,len(self.layers[x])-1)
+        y = randint(0,len(self.layers[x])-1)
+        
+        #print("SWAPPING {}{} to {}{}".format(x,j,x,y))
+
+        #del self.layers[x]
+        self.layers[x][j],self.layers[x][y] = self.layers[x][y],self.layers[x][j]
+
+    def calc_intersections(self):
+        i = 0
+        res = 0
+        for layer in self.layers:
+            res += self.calc_intersections_beetween_to_adjcent_layers(i)
+            i += 1
+        
+        return res
+        
+    def calc_intersections_beetween_to_adjcent_layers(self,i):
+        if i is len(self.layers)-1:
+            return 0
+        
+        vec = []
+        for node in self.layers[i]:
+            for n in node.get_connected():
+                i,j = self.find_ij(n)
+                vec.append(j)
+            #vec.append([j for i,j in node.get_connected()])
+        
+        res = 0
+        k = 0
+        #print(vec)
+        #exit(0)
+        for v in vec:
+            for i in range(0,k):
+               if vec[i] > vec[k]:
+                res += 1 
+            k += 1
+        return res
+        
+    
+    def find_ij(self,mynode):
+        i = 0
+        found = False
+        
+        for layer in self.layers:
+            j = 0
+            for node in layer:
+                if node == mynode:
+                    found = True
+                    break
+                j += 1
+                
+            if found is True:
+                break
+            i += 1
+            
+        return i,j
+        
+        
+
+            

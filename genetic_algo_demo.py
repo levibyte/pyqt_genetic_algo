@@ -1,222 +1,28 @@
-#from libs.renderer import Renderer
-#from libs.system import System
-from PyQt4.QtGui import *
-#from PyQt5.QtWidgets import *
-from PyQt4.QtCore import *
-from random import randint
-import random
-
-class Color:
-    def __init__(self,r,g,b):
-        self.red = r
-        self.green = g
-        self.blue = b
-        
-    def get(self):
-        return self.red,self.green,self.blue
-
-class Node:
-    def __init__(self, name, color):
-        self.name = name
-        self.connected_nodes = []
-        self.color = color
-        
-    def add_connection(self,Node):
-        self.connected_nodes.append(Node)
-        
-    def get_connected(self):
-        return self.connected_nodes
-    
-    def get_name(self):
-        return self.name
-    
-    def get_color(self):
-        return self.color.get()
-    
-class Canvas(QWidget):
-    def __init__(self, sys, *args, **kwargs):
-        super(Canvas, self).__init__(*args, **kwargs)
-        self.sys = sys
-        self.tx = 100
-        self.ty = 100
-        self.dx = 50
-        self.dy = 50
-        self.nodes = self.sys.get_data()
-
-    def mouseReleaseEvent(self, event):
-        self.sys.add_change()
-        self.nodes = self.sys.get_data()
-        print("Count: {}".format(self.sys.calc_intersections()))
-        QWidget.repaint(self)
-        #self.paintEvent(event)
-        #self.draw()
-        #ev = QResizeEvent(QSize(1000,1000),QSize(1000,1000))
-        #QMainWindow.resizeEvent(self, ev)
-     
-    def paintEvent(self, event):
-        self.draw()
-        
-    def draw(self):
-        i = 0
-        for layer in self.nodes:
-            j = 0
-            for node in layer:
-                #self.draw_node_and_its_connections(node)    
-                self.draw_node(i,j,node)
-                self.draw_connections(i,j,node.get_connected())
-                j += 1
-            i += 1
+from libs.placement import Placement
+from libs.placement_controller import PlacementController
+from libs.optimizer import Optimizer
+from libs.renderer import Renderer
             
-    def draw_node(self,i,j,node):
-        #print("drawing {} {}".format(i,j))
-        #i,j = sys.find_ij(node)
-        r,g,b = node.get_color()
-        color = QColor(r,g,b)
-        p = QPainter(self)
-        p.setRenderHint(QPainter.Antialiasing)
-
-        r = QRect(self.tx*i+self.dx,self.ty*j+self.dy,20,20)
-        outer, inner = Qt.gray, color        
-        p.fillRect(r, QBrush(inner))
-        pen = QPen(outer)
-        pen.setWidth(1)
-        p.setPen(pen)
-        p.drawRect(r)
-        
-    def draw_connections(self,i,j,nodes):
-        for node in nodes:
-            self.draw_connection(i,j,node)
-    
-    def draw_connection(self,i,j,node):
-        di,dj = self.sys.find_ij(node)
-        #print("drawing connection from (){}{} to ({}){}{}".format(i,j,node.get_name(),di,dj))
-        
-        p = QPainter(self)
-        p.setRenderHint(QPainter.Antialiasing)
-        pen = QPen(Qt.red, 3)
-        p.setPen(pen)
-        p.drawLine(10+self.tx*i+self.dx,10+self.ty*j+self.dy,10+self.tx*di+self.dx,10+self.ty*dj+self.dy)
-        
-    
-class Renderer(QMainWindow):
-    def __init__(self,sys,*args, **kwargs):
-        super(Renderer, self).__init__(*args, **kwargs)
-        #nodes = sys.get_data()
-        canvas = Canvas(sys)
-        self.setCentralWidget(canvas)
-
-
-class System:
-    def __init__(self,**kwargs): 
-        self.layers_max = kwargs['num_layers']
-        self.nodes_max = kwargs['max_nodes_in_layer']
-        self.connection_max = kwargs['max_node_connection']
-        self.create_random_placement()
-        #self.layers = [[]]
-  
-    def create_random_placement(self):
-        self.create_layers()
-        self.create_connections()
-        
-    def create_rand_color(self):
-        return Color(randint(0,255),randint(0,255),randint(0,255))
-    
-    def create_layers(self):
-        self.layers = [ [ Node("Node{}{}".format(i,j),self.create_rand_color()) for j in range(randint(1,self.nodes_max)) ] for i in range(self.layers_max) ]
-        
-    def create_connections(self):
-        i = 0
-        for layer in self.layers:
-            j = 0
-            for node in layer:
-                print("Node {} {}".format(i,j))
-                if i is not self.layers_max-1:
-                    for k in range(randint(1,self.connection_max)):
-                        x = len(self.layers[i+1])-1
-                        d = randint(0,x)
-                        print(" --> connecting to {} {}".format(i+1,d))
-                        n = self.layers[i+1][d]
-                        node.add_connection(n)
-                j+=1
-            i+=1
-
-    def get_data(self):
-        return self.layers
-    
-    def add_change(self):
-        #return 0
-        import time
-        random.seed(time.clock())
-
-        x = randint(0,len(self.layers)-1)
-        
-        j = randint(0,len(self.layers[x])-1)
-        y = randint(0,len(self.layers[x])-1)
-        
-        print("SWAPPING {}{} to {}{}".format(x,j,x,y))
-
-        #del self.layers[x]
-        self.layers[x][j],self.layers[x][y] = self.layers[x][y],self.layers[x][j]
-        
-        
-    def calc_intersections(self):
-        i = 0
-        res = 0
-        for layer in self.layers:
-            res += self.calc_intersections_beetween_to_adjcent_layers(i)
-            i += 1
-        
-        return res
-        
-    def calc_intersections_beetween_to_adjcent_layers(self,i):
-        if i is self.layers_max:
-            return 0
-        
-        vec = []
-        for node in self.layers[i]:
-            for n in node.get_connected():
-                i,j = self.find_ij(n)
-                vec.append(j)
-            #vec.append([j for i,j in node.get_connected()])
-        
-        res = 0
-        k = 0
-        #print(vec)
-        #exit(0)
-        for v in vec:
-            for i in range(0,k):
-               if vec[i] > vec[k]:
-                res += 1 
-            k += 1
-        return res
-        
-    def find_ij(self,mynode):
-        i = 0
-        found = False
-        
-        for layer in self.layers:
-            j = 0
-            for node in layer:
-                if node == mynode:
-                    found = True
-                    break
-                j += 1
-                
-            if found is True:
-                break
-            i += 1
-            
-        return i,j
-        
-initial_data = {
-    'num_layers' : 3,
+initial_settings = {
+    'num_layers' : 4,
     'max_nodes_in_layer' : 6,
     'max_node_connection' : 1,
 }
 
 if __name__ == '__main__':
-    sys = System(**initial_data)
-    app = QApplication([])
-    r = Renderer(sys)
-    r.show()
-    app.exec_()
+    #create placement controller
+    placement_controller = PlacementController()
+    
+    #create placement
+    placement = Placement(**initial_settings)
+    
+    #optimize placement, using placement controller
+    #optimizer = Optimizer(placement,placement_controller)
+    
+    placement_controller.set_placement(placement)
+    #placement_controller.set_data(optimizer.get_best_option())
+    
+    #draw 
+    renderer = Renderer(placement_controller)
+    renderer.draw()
+    
