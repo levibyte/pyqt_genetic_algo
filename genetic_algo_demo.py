@@ -4,9 +4,10 @@ from libs.optimizer import Optimizer
 from libs.renderer import Renderer
             
 initial_settings = {
-    'num_layers' : 4,
-    'max_nodes_in_layer' : 6,
-    'max_node_connection' : 1,
+    'num_layers' : 15,
+    'max_nodes_in_layer' : 7,
+    'min_node_connection' : 1,
+    'max_node_connection' : 3,
 }
 
 if __name__ == '__main__':
@@ -14,15 +15,17 @@ if __name__ == '__main__':
     placement_controller = PlacementController()
     
     #create placement
-    placement = Placement(**initial_settings)
+    #placement = Placement(**initial_settings)
+
+    #set 
+    #placement_controller.set_placement(placement)
     
     #optimize placement, using placement controller
     #optimizer = Optimizer(placement,placement_controller)
     
-    placement_controller.set_placement(placement)
-    #placement_controller.set_data(optimizer.get_best_option())
+    #placement_controller.set_data(optimizer.get_best_placement())
     
     #draw 
-    renderer = Renderer(placement_controller)
+    renderer = Renderer()
     renderer.draw()
     

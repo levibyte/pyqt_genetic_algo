@@ -1,8 +1,18 @@
 from libs.node import *
+from libs.placement import Placement
+from libs.placement_controller import PlacementController
+from libs.optimizer import Optimizer
 
 from PyQt4.QtGui import *
 #from PyQt5.QtWidgets import *
 from PyQt4.QtCore import *
+
+initial_settings = {
+    'num_layers' : 4,
+    'max_nodes_in_layer' : 6,
+    'min_node_connection' : 0,
+    'max_node_connection' : 1,
+}
 
 
 class Canvas(QWidget):
@@ -13,11 +23,17 @@ class Canvas(QWidget):
         self.ty = 100
         self.dx = 50
         self.dy = 50
-        #self.nodes = []
-        self.nodes = self.controller.get_placement()
+        #create placement
+        self.placement = Placement(**initial_settings)
 
+        #set 
+        self.controller.set_data(self.placement.get_data())
+        self.nodes = self.controller.get_placement()
+        
     def mouseReleaseEvent(self, event):
-        #self.controller.add_change()
+        #optimize placement, using placement controller
+        optimizer = Optimizer(self.placement,self.controller)
+        
         self.nodes = self.controller.get_placement()
         #print("Count: {}".format(self.controller.calc_intersections()))
         QWidget.repaint(self)
@@ -81,10 +97,19 @@ class MainWindow(QMainWindow):
         
 
 class Renderer():
-    def __init__(self,p_c):        
-        self.controller = p_c
+    #def __init__(self,p_c):        
+    #    self.controller = p_c
 
-    def draw(self):        
+    def __init__(self):
+        i = 0
+        
+    def draw(self):       
+        #create placement controller
+        self.controller  = PlacementController()
+        
+        #create placement
+        #placement = Placement(**initial_settings)
+
         app = QApplication([])
         r = MainWindow(self.controller)
         r.show()

@@ -6,6 +6,8 @@ class Placement:
         self.layers_max = kwargs['num_layers']
         self.nodes_max = kwargs['max_nodes_in_layer']
         self.connection_max = kwargs['max_node_connection']
+        self.connection_min = kwargs['min_node_connection']
+        
         self.create_random_placement()
         #self.layers = []
   
@@ -26,7 +28,7 @@ class Placement:
             for node in layer:
                 print("Node {} {}".format(i,j))
                 if i is not self.layers_max-1:
-                    for k in range(randint(1,self.connection_max)):
+                    for k in range(randint(self.connection_min,self.connection_max)):
                         x = len(self.layers[i+1])-1
                         d = randint(0,x)
                         print(" --> connecting to {} {}".format(i+1,d))

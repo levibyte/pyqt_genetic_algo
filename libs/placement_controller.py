@@ -4,17 +4,19 @@ from random import randint
 
 class PlacementController:
     def __init__(self):
-        #i=0
         self.layers = []
 
-    #def __init__(self,sys):
-    #    self.layers = sys.get_data()
-  
     def get_placement(self):
         return self.layers
     
-    def set_placement(self,placement):
-        self.layers = placement.get_data()
+    #def set_placement(self,placement):
+        #self.layers = placement.get_data()
+
+    def set_data(self,data):
+        #del self.layers
+        self.layers = []
+        self.layers = data
+        print(" from set data:{}".format(self.calc_intersections()))
         
     def add_change(self):
         #return 0
