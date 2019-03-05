@@ -82,7 +82,10 @@ class Canvas(QWidget):
         
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
-        pen = QPen(Qt.red, 3)
+        #FIXME tuple
+        r,g,b = node.get_color()
+        color = QColor(r,g,b)
+        pen = QPen(color, 3)
         p.setPen(pen)
         p.drawLine(10+self.tx*i+self.dx,10+self.ty*j+self.dy,10+self.tx*di+self.dx,10+self.ty*dj+self.dy)
         

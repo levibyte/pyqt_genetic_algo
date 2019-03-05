@@ -30,7 +30,7 @@ class Optimizer:
         
     def optimize(self):
         #print("before optimization: {}".format(self.current_fitness))
-        for i in range(9000):
+        for i in range(10000):
             self.controller.add_change()
             #fitness = self.controller.calc_intersections() 
             #print ("iteration: {} , fitness = {}".format(i,fitness))
