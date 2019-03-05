@@ -6,13 +6,13 @@ from libs.renderer import Renderer
 initial_settings = {
     'num_layers' : 15,
     'max_nodes_in_layer' : 7,
-    'min_node_connection' : 1,
-    'max_node_connection' : 3,
+    'min_node_connection' : 2,
+    'max_node_connection' : 2,
 }
 
 if __name__ == '__main__':
     #create placement controller
-    placement_controller = PlacementController()
+    #placement_controller = PlacementController()
     
     #create placement
     #placement = Placement(**initial_settings)
@@ -26,6 +26,6 @@ if __name__ == '__main__':
     #placement_controller.set_data(optimizer.get_best_placement())
     
     #draw 
-    renderer = Renderer()
-    renderer.draw()
+    r = Renderer()
+    r.render()
     

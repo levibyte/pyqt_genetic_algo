@@ -10,7 +10,7 @@ from PyQt4.QtCore import *
 initial_settings = {
     'num_layers' : 4,
     'max_nodes_in_layer' : 6,
-    'min_node_connection' : 0,
+    'min_node_connection' : 1,
     'max_node_connection' : 1,
 }
 
@@ -103,7 +103,7 @@ class Renderer():
     def __init__(self):
         i = 0
         
-    def draw(self):       
+    def render(self):       
         #create placement controller
         self.controller  = PlacementController()
         

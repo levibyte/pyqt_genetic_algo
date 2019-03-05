@@ -1,6 +1,7 @@
 from libs.node import *
 import random
 from random import randint
+import copy
 
 class PlacementController:
     def __init__(self):
@@ -15,7 +16,7 @@ class PlacementController:
     def set_data(self,data):
         #del self.layers
         self.layers = []
-        self.layers = data
+        self.layers = copy.deepcopy(data)
         print(" from set data:{}".format(self.calc_intersections()))
         
     def add_change(self):
