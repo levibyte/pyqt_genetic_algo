@@ -8,9 +8,9 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 initial_settings = {
-    'num_layers' : 4,
-    'max_nodes_in_layer' : 6,
-    'min_node_connection' : 1,
+    'num_layers' : 21,
+    'max_nodes_in_layer' : 13,
+    'min_node_connection' : 0,
     'max_node_connection' : 1,
 }
 
@@ -19,10 +19,10 @@ class Canvas(QWidget):
     def __init__(self, controller, *args, **kwargs):
         super(Canvas, self).__init__(*args, **kwargs)
         self.controller = controller
-        self.tx = 100
-        self.ty = 100
-        self.dx = 50
-        self.dy = 50
+        self.tx = 50
+        self.ty = 50
+        self.dx = 10
+        self.dy = 10
         #create placement
         self.placement = Placement(**initial_settings)
 
@@ -45,14 +45,22 @@ class Canvas(QWidget):
     def paintEvent(self, event):
         self.draw()
         
+    #def dummy(self):
+        
     def draw(self):
         i = 0
         for layer in self.nodes:
             j = 0
             for node in layer:
                 #self.draw_node_and_its_connections(node)    
+                #self.draw_connections(i,j,node.get_connected())
+                #FIXME elimiate ghost nodes
+                if not node.get_parents() and not node.get_connected():
+                    print("")
+                else:
+                    self.draw_node(i,j,node)
+                
                 self.draw_connections(i,j,node.get_connected())
-                self.draw_node(i,j,node)
                 j += 1
             i += 1
             

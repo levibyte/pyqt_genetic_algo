@@ -8,11 +8,11 @@ class Color:
         return self.red,self.green,self.blue
 
 class Node:
-    def __init__(self, name, color, parent=None):
+    def __init__(self, name, color):
         self.name = name
-        self.connected_nodes = []
         self.color = color
         self.parents = []
+        self.connected_nodes = []
         
     def add_connection(self,Node):
         self.connected_nodes.append(Node)

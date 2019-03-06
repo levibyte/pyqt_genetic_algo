@@ -33,9 +33,11 @@ class Placement:
                         d = randint(0,x)
                         print(" --> connecting to {} {}".format(i+1,d))
                         n = self.layers[i+1][d]
+                        #FIXME broken
                         node.add_connection(n)
                         n.add_parent(node)
                         node.colorize()
+                        n.colorize()
                         #col = node.get_color()
                         #n.set_color(col)
                         

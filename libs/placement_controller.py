@@ -15,9 +15,11 @@ class PlacementController:
 
     def set_data(self,data):
         #del self.layers
-        self.layers = []
-        self.layers = copy.deepcopy(data)
-        print(" from set data:{}".format(self.calc_intersections()))
+        #self.layers = []
+        #self.layers = copy.deepcopy(data)
+        self.layers = data
+        #self.layers = copy.copy(data)
+        #print(" from set data:{}".format(self.calc_intersections()))
         
     def add_change(self):
         #return 0
@@ -84,6 +86,22 @@ class PlacementController:
             
         return i,j
         
+    
+    def merge(self,nodes1,nodes2):
+        res = []
+        for i in range(len(nodes1)):
+            #print("////////MERGE: {} {}".format(len(nodes1),len(nodes2)))
+            res.append(self.merge_columns(nodes1[i],nodes2[i]))
         
+        return res
+            
+            
+        
+    def merge_columns(self,col1,col2):
+        in_first = set(col1)
+        in_second = set(col2)
+        in_second_but_not_in_first = in_second - in_first
+        result = col1 + list(in_second_but_not_in_first)
+        return result
 
             
