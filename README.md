@@ -9,10 +9,10 @@ specialy in places where there are a lot of combinations and finding optimal sol
 The Aim of this project is to demonstrate optimized cell placement to complete efficient routing
 Optimization should meet following criterias.
 * Each node when moved should preserve it's connectivity ( parent & child connections )
-* Cell position can be adjusted within same colum ( cell can be only poped/pushed vertically, horizontal moves not allowed)
+* Cell position can be adjusted within same colum ( might poped/pushed vertically, but not horizontally )
 * Intersections/crossings beetween  should be minimal.
 
-#### Problem on the picture
+#### Self explanatory images : )
 *Left:* Initial placmenet  &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *Right:* optimized placement
 
 <img src="https://i.ibb.co/C2gyWWf/bef.png" width="410" height="400">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
