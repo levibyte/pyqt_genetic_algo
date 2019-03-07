@@ -3,12 +3,12 @@ from libs.placement_controller import PlacementController
 from libs.optimizer import Optimizer
 from libs.renderer import Renderer
             
-initial_settings = {
-    'num_layers' : 15,
-    'max_nodes_in_layer' : 7,
-    'min_node_connection' : 2,
-    'max_node_connection' : 2,
-}
+#initial_settings = {
+#    'num_layers' : 15,
+#    'max_nodes_in_layer' : 7,
+#    'min_node_connection' : 2,
+#    'max_node_connection' : 3,
+#}
 
 if __name__ == '__main__':
     #create placement controller

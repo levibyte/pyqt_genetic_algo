@@ -93,15 +93,17 @@ class PlacementController:
             #print("////////MERGE: {} {}".format(len(nodes1),len(nodes2)))
             res.append(self.merge_columns(nodes1[i],nodes2[i]))
         
-        return res
+        return nodes2
             
             
         
     def merge_columns(self,col1,col2):
-        in_first = set(col1[:len(col1)])
+        in_first = set(col1[:len(col1)//2])
         in_second = set(col2)
         in_second_but_not_in_first = in_second - in_first
-        result = col1 + list(in_second_but_not_in_first)
+        result = col1[:len(col1)//2] + list(in_second_but_not_in_first)
+        #result = col1 + list(in_second_but_not_in_first)
+        #return in_second 
         return result
 
             

@@ -8,7 +8,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 initial_settings = {
-    'num_layers' : 6,
+    'num_layers' : 13,
     'max_nodes_in_layer' : 6,
     'min_node_connection' : 1,
     'max_node_connection' : 1,
@@ -29,6 +29,9 @@ class Canvas(QWidget):
         #set 
         self.controller.set_data(self.placement.get_data())
         self.nodes = self.controller.get_placement()
+        print("Intersctions: {}".format(self.controller.calc_intersections()))
+        print("Click on canvas to start optimization...")
+
         
     def keyPressEvent(self, event):
         self.placement = Placement(**initial_settings)
@@ -62,10 +65,10 @@ class Canvas(QWidget):
                 #self.draw_node_and_its_connections(node)    
                 #self.draw_connections(i,j,node.get_connected())
                 #FIXME elimiate ghost nodes
-                if not node.get_parents() and not node.get_connected():
-                    print("")
-                else:
-                    self.draw_node(i,j,node)
+                #if not node.get_parents() and not node.get_connected():
+                #    print("")
+                #else:
+                self.draw_node(i,j,node)
                 
                 self.draw_connections(i,j,node.get_connected())
                 j += 1

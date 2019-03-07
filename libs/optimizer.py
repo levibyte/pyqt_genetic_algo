@@ -16,19 +16,8 @@ class Optimizer:
         self.current_fitness = self.initial_fitness
         print("BEGIN: {}".format(self.controller.calc_intersections()))
         self.optimize2()
-        
-        #while self.controller.calc_intersections() is not 0:
-            #self.controller.add_change()
-        #for i in range(1000):
-            #self.controller.add_change()
-            #self.controller.add_change()
-            #self.controller.add_change()
-        
-        #self.best_data = self.controller.get_placement()
-        #self.controller.set_data(self.best_data)
-        #print("END: {}".format(self.controller.calc_intersections()))
 
-    def optimize(self):
+    def rand_optimize(self):
         #print("before optimization: {}".format(self.current_fitness))
         for i in range(30000):
             self.controller.add_change()
@@ -48,9 +37,10 @@ class Optimizer:
         print("END: {}".format(self.controller.calc_intersections()))
         
     def optimize2(self):
-        gens_max=10
+        gens_max=15
         survivors_factor=3
-        max_iterations=100
+        crossover_factor=2
+        max_iterations=1000
         
         gens = {self.initial_fitness:self.data}
         
@@ -82,8 +72,9 @@ class Optimizer:
                 
             if self.current_fitness is 0:
                 break
-            #crossover
-            x = gens_max-max_winners
+           
+           #crossover
+            x = gens_max-crossover_factor*max_winners
             for g in range(x):
                 import time
                 random.seed(time.clock())
@@ -100,17 +91,19 @@ class Optimizer:
                 fitness = self.controller.calc_intersections()
                 gens[fitness] = copy.deepcopy(self.controller.get_placement())
                 #print("-->crossover {} {}".format(g,fitness))
-            
-            #mutation
-            #for v in gens.values():
-                #self.controller.set_data(copy.deepcopy(v))
-                #self.controller.add_change()
-                #fitness = self.controller.calc_intersections()
-                #del v
-                #gens[fitness] = gen
+           
+           #mutation
+            x = crossover_factor*max_winners
+            for g in range(x):
+                gen = winners[random.randint(0,len(winners)-1)]
+                self.controller.set_data(copy.deepcopy(gen))
+                self.controller.add_change()
+                fitness = self.controller.calc_intersections()
+                gens[fitness] = copy.deepcopy(self.controller.get_placement())
                 #print("-->crossover {} {}".format(g,fitness))
             
             print()
+
         print("end.")
         
         #self.best_data = winners[0]
