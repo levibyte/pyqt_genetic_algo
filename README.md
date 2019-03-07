@@ -8,7 +8,7 @@ specialy in places where there are a lot of combinations and finding optimal sol
 ### The task to solve
 The Aim of this project is to achieve optimized cell placement to complete efficient routing.
 Optimization should meet following criterias.
-* Each node (when moved) should preserve it's connectivity ( parent & child connections )
+* Each cell (when moved) should preserve it's connectivity ( parent & child connections )
 * Cell position can be adjusted within same colum ( can be moved vertically, but not horizontally )
 * Intersections/crossings beetween connections should be minimal.
 
