@@ -19,7 +19,7 @@ class Placement:
         return Color(randint(0,255),randint(0,255),randint(0,255))
     
     def create_layers(self):
-        self.layers = [ [ Node("Node{}{}".format(i,j),self.create_rand_color()) for j in range(randint(2,self.nodes_max)) ] for i in range(self.layers_max) ]
+        self.layers = [ [ Node("({},{})".format(i,j),self.create_rand_color()) for j in range(randint(2,self.nodes_max)) ] for i in range(self.layers_max) ]
         
     def create_connections(self):
         i = 0

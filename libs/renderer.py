@@ -8,9 +8,9 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 initial_settings = {
-    'num_layers' : 21,
-    'max_nodes_in_layer' : 13,
-    'min_node_connection' : 0,
+    'num_layers' : 6,
+    'max_nodes_in_layer' : 6,
+    'min_node_connection' : 1,
     'max_node_connection' : 1,
 }
 
@@ -19,10 +19,10 @@ class Canvas(QWidget):
     def __init__(self, controller, *args, **kwargs):
         super(Canvas, self).__init__(*args, **kwargs)
         self.controller = controller
-        self.tx = 50
-        self.ty = 50
-        self.dx = 10
-        self.dy = 10
+        self.tx = 100
+        self.ty = 100
+        self.dx = 50
+        self.dy = 50
         #create placement
         self.placement = Placement(**initial_settings)
 
@@ -30,6 +30,13 @@ class Canvas(QWidget):
         self.controller.set_data(self.placement.get_data())
         self.nodes = self.controller.get_placement()
         
+    def keyPressEvent(self, event):
+        self.placement = Placement(**initial_settings)
+        self.controller.set_data(self.placement.get_data())
+        self.nodes = self.controller.get_placement()
+        QWidget.repaint(self)
+        
+
     def mouseReleaseEvent(self, event):
         #optimize placement, using placement controller
         optimizer = Optimizer(self.placement,self.controller)
@@ -77,12 +84,14 @@ class Canvas(QWidget):
         p.setRenderHint(QPainter.Antialiasing)
 
         r = QRect(self.tx*i+self.dx,self.ty*j+self.dy,20,20)
-        outer, inner = Qt.gray, color        
+        outer, inner = Qt.black, color        
         p.fillRect(r, QBrush(inner))
         pen = QPen(outer)
         pen.setWidth(1)
         p.setPen(pen)
         p.drawRect(r)
+        
+        p.drawText(self.tx*i+self.dx,self.ty*j+self.dy,node.get_name())
         
     def draw_connection(self,i,j,node):
         di,dj = self.controller.find_ij(node)

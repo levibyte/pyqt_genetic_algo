@@ -98,7 +98,7 @@ class PlacementController:
             
         
     def merge_columns(self,col1,col2):
-        in_first = set(col1)
+        in_first = set(col1[:len(col1)])
         in_second = set(col2)
         in_second_but_not_in_first = in_second - in_first
         result = col1 + list(in_second_but_not_in_first)

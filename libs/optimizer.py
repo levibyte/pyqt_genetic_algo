@@ -50,7 +50,7 @@ class Optimizer:
     def optimize2(self):
         gens_max=10
         survivors_factor=3
-        max_iterations=1000
+        max_iterations=100
         
         gens = {self.initial_fitness:self.data}
         
@@ -91,12 +91,12 @@ class Optimizer:
                 random.seed(time.clock())
                 b = random.randint(0,len(winners)-1)
                 #print("-----crossover winner{} winner{}".format(a,b))
-                #gen1 = winners[a]
-                #gen2 = winners[b]
-                #gen = self.controller.merge(gen1,gen2)
-                gen = winners[random.randint(0,len(winners)-1)]
+                gen1 = winners[a]
+                gen2 = winners[b]
+                gen = self.controller.merge(gen1,gen2)
+                #gen = winners[random.randint(0,len(winners)-1)]
                 self.controller.set_data(copy.deepcopy(gen))
-                self.controller.add_change()
+                #self.controller.add_change()
                 fitness = self.controller.calc_intersections()
                 gens[fitness] = copy.deepcopy(self.controller.get_placement())
                 #print("-->crossover {} {}".format(g,fitness))
