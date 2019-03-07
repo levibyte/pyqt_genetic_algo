@@ -6,11 +6,11 @@ Genetic algorithm is special technique for solving optimization problems,
 specialy in places where there are a lot of combinations and finding optimal solotion by simply brute-forcing is impossible.
 
 ### The task to solve
-The Aim of this project is to demonstrate optimized cell placement to complete efficient routing
+The Aim of this project is to achieve optimized cell placement to complete efficient routing.
 Optimization should meet following criterias.
-* Each node when moved should preserve it's connectivity ( parent & child connections )
-* Cell position can be adjusted within same colum ( might poped/pushed vertically, but not horizontally )
-* Intersections/crossings beetween  should be minimal.
+* Each node (when moved) should preserve it's connectivity ( parent & child connections )
+* Cell position can be adjusted within same colum ( can be moved vertically, but not horizontally )
+* Intersections/crossings beetween connections should be minimal.
 
 #### Self explanatory images : )
 *Left:* Initial placmenet  &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *Right:* optimized placement
