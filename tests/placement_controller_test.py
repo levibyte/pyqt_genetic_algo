@@ -1,8 +1,8 @@
 import pytest
+import copy
 
 from libs.placement_controller import PlacementController
 from libs.node import Node, Color
-
 
 @pytest.fixture
 def placement_data():
@@ -73,5 +73,15 @@ def test_count_intersections_on_swap_inside_second_column(placement_data):
     pc.set_data(placement_data)
     assert 2 == pc.calc_intersections()
 
+def test_merge(placement_data):
+    pc = PlacementController();
+    data2 = copy.deepcopy(placement_data)
+    data2[0][0],data2[0][2] = data2[0][2],data2[0][0]
+    #placement_data[1][0],placement_data[1][2] = placement_data[1][2],placement_data[1][0]
+    pc.set_data(copy.deepcopy(pc.merge(placement_data,data2)))
+    assert 0  == pc.calc_intersections()
+    assert pc.get_placement()[0][0].get_connected()[0] == pc.get_placement()[1][0] 
+    
+    
     
     
